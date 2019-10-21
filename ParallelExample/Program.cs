@@ -12,23 +12,34 @@ namespace ParallelExample
         static void Main(string[] args)
         {
            
-            //***********************
+               //***********************
             var watch = System.Diagnostics.Stopwatch.StartNew();
             CallModularExample();
             watch.Stop();
             Console.WriteLine($"Execution Time Modular Example: {watch.ElapsedMilliseconds} ms");
             //***********************
-
+            Console.WriteLine("");
             Console.WriteLine("******************");
-
+            Console.WriteLine("");
             //***********************
             watch = System.Diagnostics.Stopwatch.StartNew();
             CallParallelExample();
             watch.Stop();
-            Console.WriteLine($"Execution Time Parallel Example: {watch.ElapsedMilliseconds} ms");
+            Console.WriteLine($"Execution Time Parallel Example 1: {watch.ElapsedMilliseconds} ms");
             //***********************
-
+            Console.WriteLine("");
             Console.WriteLine("******************");
+            Console.WriteLine("");
+
+            //***********************
+            watch = System.Diagnostics.Stopwatch.StartNew();
+            CallParallelExample2();
+            watch.Stop();
+            Console.WriteLine($"Execution Time Parallel Example 2 (Parallel.For) : {watch.ElapsedMilliseconds} ms");
+            //***********************
+            Console.WriteLine("");
+            Console.WriteLine("******************");
+            Console.WriteLine("");
 
             //***********************
             //Note: // This method runs asynchronously.
@@ -36,53 +47,60 @@ namespace ParallelExample
             watch = System.Diagnostics.Stopwatch.StartNew();
             AwaitExample();
             watch.Stop();
-            Console.WriteLine($"Execution Time AsyncAwait Example: {watch.ElapsedMilliseconds} ms");
+            Console.WriteLine($"Execution Time AsyncAwait Example 2: {watch.ElapsedMilliseconds} ms");
             //***********************
-
-
-            Console.WriteLine("******************");
 
             Console.ReadKey();
         }
 
 
 
+       #region MethodsForParallelAsyncExample
+
+
         static void CallModularExample()
         {
             for (int i = 0; i < 3; i++)
             {
-                NoCottoNo();
+                JobExample();
             }
 
         }
-
-
+        
         static void CallParallelExample()
         {
-          
-              Parallel.Invoke( NoCottoNo, NoCottoNo, NoCottoNo);
-           
+
+            Parallel.Invoke(JobExample, JobExample, JobExample);
+
         }
+        
 
-
+        static void CallParallelExample2()
+        {
+            Parallel.For(0, 3,
+              index => {
+                  JobExample();
+              });
+        }
 
         static async void AwaitExample()
         {
             for (int i = 0; i < 3; i++)
             {
-                await Task.Run(() => NoCottoNo());
+                await Task.Run(() => JobExample());
             }
-            
+
         }
+                
 
-
-
-
-        static void NoCottoNo()
+        static void JobExample()
         {
             Thread.Sleep(1000);
-            Console.WriteLine("Cotto  --> NoNoNo");
+            Console.WriteLine("JobExample");
+        
         }
+
+        #endregion
 
 
 
